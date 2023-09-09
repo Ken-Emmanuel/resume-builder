@@ -1,5 +1,5 @@
 // regex for validation
-const strRegex =  /^[a-zA-Z\s]*$/; // containing only letters
+const strRegex = /^[a-zA-Z\s]*$/; // containing only letters
 const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const phoneRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
 /* supports following number formats - (123) 456-7890, (123)456-7890, 123-456-7890, 123.456.7890, 1234567890, +31636363634, 075-63546725 */
@@ -38,21 +38,42 @@ let nameDsp = document.getElementById('fullname_dsp'),
     achievementsDsp = document.getElementById('achievements_dsp'),
     skillsDsp = document.getElementById('skills_dsp'),
     educationsDsp = document.getElementById('educations_dsp'),
-    experiencesDsp = document.getElementById('experiences_dsp');
+    experiencesDsp = document.getElementById('experiences_dsp'),
+    educationsDesp = document.getElementById('educations_desp');
 
 // first value is for the attributes and second one passes the nodelists
+// const fetchValues = (attrs, ...nodeLists) => {
+//     let elemsAttrsCount = nodeLists.length;
+//     let elemsDataCount = nodeLists[0].length;
+//     let tempDataArr = [];
+
+//     // first loop deals with the no of repeaters value
+//     for (let i = 0; i < elemsDataCount; i++) {
+//         let dataObj = {}; // creating an empty object to fill the data
+//         // second loop fetches the data for each repeaters value or attributes 
+//         for (let j = 0; j < elemsAttrsCount; j++) {
+//             // setting the key name for the object and fill it with data
+//             dataObj[`${attrs[j]}`] = nodeLists[j][i].value;
+//         }
+//         tempDataArr.push(dataObj);
+//     }
+
+//     return tempDataArr;
+// }
 const fetchValues = (attrs, ...nodeLists) => {
     let elemsAttrsCount = nodeLists.length;
     let elemsDataCount = nodeLists[0].length;
     let tempDataArr = [];
 
     // first loop deals with the no of repeaters value
-    for(let i = 0; i < elemsDataCount; i++){
+    for (let i = 0; i < elemsDataCount; i++) {
         let dataObj = {}; // creating an empty object to fill the data
         // second loop fetches the data for each repeaters value or attributes 
-        for(let j = 0; j < elemsAttrsCount; j++){
-            // setting the key name for the object and fill it with data
-            dataObj[`${attrs[j]}`] = nodeLists[j][i].value;
+        for (let j = 0; j < elemsAttrsCount; j++) {
+            // setting the key name for the object from attrs and fill it with data from nodeLists
+            const key = attrs[j];
+            const value = nodeLists[j][i].value;
+            dataObj[key] = value;
         }
         tempDataArr.push(dataObj);
     }
@@ -60,33 +81,39 @@ const fetchValues = (attrs, ...nodeLists) => {
     return tempDataArr;
 }
 
+
 const getUserInputs = () => {
 
     // achivements 
     let achievementsTitleElem = document.querySelectorAll('.achieve_title'),
-    achievementsDescriptionElem = document.querySelectorAll('.achieve_description');
+        achievementsDescriptionElem = document.querySelectorAll('.achieve_description');
 
     // experiences
     let expTitleElem = document.querySelectorAll('.exp_title'),
-    expOrganizationElem = document.querySelectorAll('.exp_organization'),
-    expLocationElem = document.querySelectorAll('.exp_location'),
-    expStartDateElem = document.querySelectorAll('.exp_start_date'),
-    expEndDateElem = document.querySelectorAll('.exp_end_date'),
-    expDescriptionElem = document.querySelectorAll('.exp_description');
+        expOrganizationElem = document.querySelectorAll('.exp_organization'),
+        expLocationElem = document.querySelectorAll('.exp_location'),
+        expStartDateElem = document.querySelectorAll('.exp_start_date'),
+        expEndDateElem = document.querySelectorAll('.exp_end_date'),
+        expDescriptionElem = document.querySelectorAll('.exp_description');
 
     // education
     let eduSchoolElem = document.querySelectorAll('.edu_school'),
-    eduDegreeElem = document.querySelectorAll('.edu_degree'),
-    eduCityElem = document.querySelectorAll('.edu_city'),
-    eduStartDateElem = document.querySelectorAll('.edu_start_date'),
-    eduGraduationDateElem = document.querySelectorAll('.edu_graduation_date'),
-    eduDescriptionElem = document.querySelectorAll('.edu_description');
+        eduDegreeElem = document.querySelectorAll('.edu_degree'),
+        eduCityElem = document.querySelectorAll('.edu_city'),
+        eduStartDateElem = document.querySelectorAll('.edu_start_date'),
+        eduGraduationDateElem = document.querySelectorAll('.edu_graduation_date'),
+        eduDescriptionElem = document.querySelectorAll('.edu_description');
 
     let projTitleElem = document.querySelectorAll('.proj_title'),
-    projLinkElem = document.querySelectorAll('.proj_link'),
-    projDescriptionElem = document.querySelectorAll('.proj_description');
+        projLinkElem = document.querySelectorAll('.proj_link'),
+        projDescriptionElem = document.querySelectorAll('.proj_description');
 
     let skillElem = document.querySelectorAll('.skill');
+
+    const summary = `I am a person, responsible with their work during working hours.
+    Finish various technical and higher studies at large universities.
+    I have several years of experience and achievements in the labor
+    field.`
 
     // event listeners for form validation
     firstnameElem.addEventListener('keyup', (e) => validateFormData(e.target, validType.TEXT, 'First Name'));
@@ -117,14 +144,14 @@ const getUserInputs = () => {
     skillElem.forEach(item => item.addEventListener('keyup', (e) => validateFormData(e.target, validType.ANY, 'skill')));
 
     return {
-        firstname: firstnameElem.value,
+        firstname: firstnameElem.value || 'John',
         middlename: middlenameElem.value,
         lastname: lastnameElem.value,
-        designation: designationElem.value,
-        address: addressElem.value,
-        email: emailElem.value,
-        phoneno: phonenoElem.value,
-        summary: summaryElem.value,
+        designation: designationElem.value || 'Game Developer',
+        address: addressElem.value || 'Accra Ghana',
+        email: emailElem.value || 'user@email.com',
+        phoneno: phonenoElem.value || '123-456-789',
+        summary: summaryElem.value || summary,
         achievements: fetchValues(['achieve_title', 'achieve_description'], achievementsTitleElem, achievementsDescriptionElem),
         experiences: fetchValues(['exp_title', 'exp_organization', 'exp_location', 'exp_start_date', 'exp_end_date', 'exp_description'], expTitleElem, expOrganizationElem, expLocationElem, expStartDateElem, expEndDateElem, expDescriptionElem),
         educations: fetchValues(['edu_school', 'edu_degree', 'edu_city', 'edu_start_date', 'edu_graduation_date', 'edu_description'], eduSchoolElem, eduDegreeElem, eduCityElem, eduStartDateElem, eduGraduationDateElem, eduDescriptionElem),
@@ -133,45 +160,45 @@ const getUserInputs = () => {
     }
 };
 
-function validateFormData(elem, elemType, elemName){
+function validateFormData(elem, elemType, elemName) {
     // checking for text string and non empty string
-    if(elemType == validType.TEXT){
-        if(!strRegex.test(elem.value) || elem.value.trim().length == 0) addErrMsg(elem, elemName);
+    if (elemType == validType.TEXT) {
+        if (!strRegex.test(elem.value) || elem.value.trim().length == 0) addErrMsg(elem, elemName);
         else removeErrMsg(elem);
     }
 
     // checking for only text string
-    if(elemType == validType.TEXT_EMP){
-        if(!strRegex.test(elem.value)) addErrMsg(elem, elemName);
+    if (elemType == validType.TEXT_EMP) {
+        if (!strRegex.test(elem.value)) addErrMsg(elem, elemName);
         else removeErrMsg(elem);
     }
 
     // checking for email
-    if(elemType == validType.EMAIL){
-        if(!emailRegex.test(elem.value) || elem.value.trim().length == 0) addErrMsg(elem, elemName);
+    if (elemType == validType.EMAIL) {
+        if (!emailRegex.test(elem.value) || elem.value.trim().length == 0) addErrMsg(elem, elemName);
         else removeErrMsg(elem);
     }
 
     // checking for phone number
-    if(elemType == validType.PHONENO){
-        if(!phoneRegex.test(elem.value) || elem.value.trim().length == 0) addErrMsg(elem, elemName);
+    if (elemType == validType.PHONENO) {
+        if (!phoneRegex.test(elem.value) || elem.value.trim().length == 0) addErrMsg(elem, elemName);
         else removeErrMsg(elem);
     }
 
     // checking for only empty
-    if(elemType == validType.ANY){
-        if(elem.value.trim().length == 0) addErrMsg(elem, elemName);
+    if (elemType == validType.ANY) {
+        if (elem.value.trim().length == 0) addErrMsg(elem, elemName);
         else removeErrMsg(elem);
     }
 }
 
 // adding the invalid text
-function addErrMsg(formElem, formElemName){
+function addErrMsg(formElem, formElemName) {
     formElem.nextElementSibling.innerHTML = `${formElemName} is invalid`;
 }
 
 // removing the invalid text 
-function removeErrMsg(formElem){
+function removeErrMsg(formElem) {
     formElem.nextElementSibling.innerHTML = "";
 }
 
@@ -181,8 +208,8 @@ const showListData = (listData, listContainer) => {
     listData.forEach(listItem => {
         let itemElem = document.createElement('div');
         itemElem.classList.add('preview-item');
-        
-        for(const key in listItem){
+
+        for (const key in listItem) {
             let subItemElem = document.createElement('span');
             subItemElem.classList.add('preview-item-val');
             subItemElem.innerHTML = `${listItem[key]}`;
@@ -192,6 +219,71 @@ const showListData = (listData, listContainer) => {
         listContainer.appendChild(itemElem);
     })
 }
+
+const addBulletLineAndPoint = (listData, listContainer) => {
+    listContainer.innerHTML = "";
+    let hasMultipleEducationTime = false; // Flag to track multiple "education__time" elements
+    listData.forEach((listItem, index) => {
+        let itemElem = document.createElement('div');
+        itemElem.classList.add('education__content');
+
+        // Create the outermost div with class "education__content"
+        const educationContentDiv = document.createElement("div");
+        educationContentDiv.classList.add("education__content");
+
+        // Create the "education__time" div
+        const educationTimeDiv = document.createElement("div");
+        educationTimeDiv.classList.add("education__time");
+
+        // Create the "education__rounder" span
+        const educationRounderSpan = document.createElement("span");
+        educationRounderSpan.classList.add("education__rounder");
+
+        // Create the "education__line" span
+        const educationLineSpan = document.createElement("span");
+        educationLineSpan.classList.add("education__line");
+
+        // Append "education__rounder" and "education__line" spans to "education__time" div
+        educationTimeDiv.appendChild(educationRounderSpan);
+        if (index !== listData.length - 1) { educationTimeDiv.appendChild(educationLineSpan) };
+
+        // Create the "education__data" div
+        const educationDataDiv = document.createElement("div");
+        educationDataDiv.classList.add("education__data");
+        educationDataDiv.classList.add("bd-grid");
+
+        // Create the "education__title" h3 element
+        const educationTitleH3 = document.createElement("h3");
+        educationTitleH3.classList.add("education__title");
+
+        // Create the "education__studies" span
+        const educationStudiesSpan = document.createElement("span");
+        educationStudiesSpan.classList.add("education__studies");
+
+        // Create the "education__year" span
+        const educationYearSpan = document.createElement("span");
+        educationYearSpan.classList.add("education__year");
+
+        educationTitleH3.textContent = listItem.edu_degree;
+        educationStudiesSpan.textContent = listItem.edu_school;
+        educationYearSpan.textContent = listItem.edu_start_date + '-' + listItem.edu_graduation_date;
+
+        // Append the h3, "education__studies", and "education__year" elements to "education__data" div
+        educationDataDiv.appendChild(educationTitleH3);
+        educationDataDiv.appendChild(educationStudiesSpan);
+        educationDataDiv.appendChild(educationYearSpan);
+
+        // Append "education__time" and "education__data" divs to "education__content" div
+        itemElem.appendChild(educationTimeDiv);
+        itemElem.appendChild(educationDataDiv);
+
+        // Append the entire "education__content" div to the body of the document
+        document.body.appendChild(itemElem);
+
+        listContainer.appendChild(itemElem);
+    });
+}
+
 
 const displayCV = (userData) => {
     nameDsp.innerHTML = userData.firstname + " " + userData.middlename + " " + userData.lastname;
@@ -205,33 +297,33 @@ const displayCV = (userData) => {
     showListData(userData.skills, skillsDsp);
     showListData(userData.educations, educationsDsp);
     showListData(userData.experiences, experiencesDsp);
+    addBulletLineAndPoint(userData.educations, educationsDesp);
 }
 
 // generate CV
 const generateCV = () => {
     let userData = getUserInputs();
     displayCV(userData);
-    console.log(userData);
 }
 
-function previewImage(){
+function previewImage() {
     let oFReader = new FileReader();
     oFReader.readAsDataURL(imageElem.files[0]);
-    oFReader.onload = function(ofEvent){
+    oFReader.onload = function (ofEvent) {
         imageDsp.src = ofEvent.target.result;
     }
 }
 
 // print CV
-function printCV(){
+function printCV() {
     window.print();
 }
 
-function previewCV(){
+function previewCV() {
     let currentUrl = window.location.href;
-    currentUrl = currentUrl.replace('index','Preview')
+    currentUrl = currentUrl.replace('index', 'Preview')
     window.open(currentUrl)
     let userData = getUserInputs()
-    localStorage.setItem('user info',JSON.stringify(userData))
-    console.log(userData, 'fullname')
+    localStorage.setItem('user info', JSON.stringify(userData))
+
 }
