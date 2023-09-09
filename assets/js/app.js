@@ -226,3 +226,12 @@ function previewImage(){
 function printCV(){
     window.print();
 }
+
+function previewCV(){
+    let currentUrl = window.location.href;
+    currentUrl = currentUrl.replace('index','Preview')
+    window.open(currentUrl)
+    let userData = getUserInputs()
+    localStorage.setItem('user info',JSON.stringify(userData))
+    console.log(userData, 'fullname')
+}
